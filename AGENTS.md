@@ -10,16 +10,16 @@ A Docker Compose stack that monitors network connectivity to GlueKube cluster se
 
 | File | Purpose |
 |------|---------|
-| `docker-compose.yml` | Service orchestration - 3 services: grafana, prometheus, network-exporter |
+| `docker-compose.yml` | Service orchestration - 3 services: grafana-glueops-gluekube-monitor, prometheus-glueops-gluekube-monitor, network-exporter-glueops-gluekube-monitor |
 | `network-exporter/generate_network_exporter.sh` | Fetches server IPs from AutoGlue API, generates targets config |
 | `network-exporter/Dockerfile` | Runs generate script at startup, then network_exporter |
 | `grafana/dashboards/gluekube.json` | Main Grafana dashboard (legacy JSON format required) |
-| `prometheus/prometheus.yml` | Scrape config - targets network-exporter:9427 |
+| `prometheus/prometheus.yml` | Scrape config - targets network-exporter-glueops-gluekube-monitor:9427 |
 
 ## Architecture
 
 ```
-network-exporter (port 9427) → prometheus (port 9090) → grafana (port 3000/80)
+network-exporter-glueops-gluekube-monitor (port 9427) → prometheus-glueops-gluekube-monitor (port 9090) → grafana-glueops-gluekube-monitor (port 3000/60080)
        ↓
   AutoGlue API (fetches cluster/server IPs at startup)
 ```

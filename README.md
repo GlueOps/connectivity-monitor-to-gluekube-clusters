@@ -5,16 +5,27 @@ Monitor network connectivity to all GlueKube cluster servers using ICMP ping met
 ## Architecture
 
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  network-       │     │   prometheus    │     │    grafana      │
-│  exporter       │────▶│                 │────▶│                 │
-│  (ICMP pings)   │     │  (scrapes       │     │  (dashboards)   │
-│                 │     │   metrics)      │     │                 │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-        │
-        ▼
-   AutoGlue API
-   (fetches server IPs)
+┌──────────────────────────────────────┐
+│  network-exporter-glueops-gluekube-  │
+│  monitor (port 9427)                 │
+│  (ICMP pings all cluster servers)   │
+└──────────────────┬───────────────────┘
+                   │
+                   ▼
+┌──────────────────────────────────────┐
+│  prometheus-glueops-gluekube-monitor │
+│  (port 9090)                         │
+│  (scrapes metrics)                   │
+└──────────────────┬───────────────────┘
+                   │
+                   ▼
+┌──────────────────────────────────────┐
+│  grafana-glueops-gluekube-monitor    │
+│  (port 60080)                        │
+│  (dashboards & visualization)        │
+└──────────────────────────────────────┘
+
+network-exporter fetches IPs from AutoGlue API at startup
 ```
 
 ## Quick Start
@@ -35,7 +46,7 @@ echo "API_KEY=your-api-key-here" > .env
 docker-compose up --build
 ```
 
-Access Grafana at http://localhost (port 80)
+Access Grafana at http://localhost:60080
 
 - **Username:** `admin`
 - **Password:** `grafana`
@@ -100,7 +111,7 @@ Prometheus is configured to retain metrics for 2 days (`--storage.tsdb.retention
 
 ### No data in Grafana
 
-1. Check network-exporter logs: `docker-compose logs network-exporter`
+1. Check network-exporter logs: `docker-compose logs network-exporter-glueops-gluekube-monitor`
 2. Verify API key is valid
 3. Ensure servers have public IPs in AutoGlue
 

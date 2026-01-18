@@ -20,4 +20,4 @@ scrape_configs:
   scheme: http
   static_configs:
   - targets:
-    - network-exporter:9427
+    - network-exporter-glueops-gluekube-monitor:9427

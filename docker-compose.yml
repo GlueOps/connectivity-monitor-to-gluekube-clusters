@@ -1,27 +1,27 @@
 services:
-  grafana:
+  grafana-glueops-gluekube-monitor:
     build: ./grafana
     ports:
-      - '80:3000'
+      - '60080:3000'
     restart: unless-stopped
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: grafana
-    container_name: grafana
+    container_name: grafana-glueops-gluekube-monitor
     depends_on:
-      - prometheus
+      - prometheus-glueops-gluekube-monitor
 
-  prometheus:
+  prometheus-glueops-gluekube-monitor:
     build: ./prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.retention.time=2d'
+      - '--storage.tsdb.retention.time=14d'
     restart: unless-stopped
-    container_name: prometheus
+    container_name: prometheus-glueops-gluekube-monitor
     depends_on:
-      - network-exporter
+      - network-exporter-glueops-gluekube-monitor
 
-  network-exporter:
+  network-exporter-glueops-gluekube-monitor:
     build: ./network-exporter
     environment:
       API_KEY: ${API_KEY}
@@ -30,4 +30,4 @@ services:
       - NET_RAW
     restart: unless-stopped
     privileged: true
-    container_name: network-exporter
+    container_name: network-exporter-glueops-gluekube-monitor
