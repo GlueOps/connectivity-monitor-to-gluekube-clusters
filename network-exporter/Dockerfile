@@ -1,4 +1,4 @@
-FROM syepes/network_exporter:1.8.0
+FROM syepes/network_exporter:1.8.0@sha256:00af1691570e84bb0d8839d934e1ca10e9ee018385463609e03a8137e0ea9c56
 
 WORKDIR /app/cfg
 
